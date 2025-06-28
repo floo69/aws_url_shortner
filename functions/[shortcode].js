@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   const shortcode = context.params.shortcode;
-  const apiBase = 'https://5wilb4sld8.execute-api.ap-south-1.amazonaws.com';
+  const apiBase = 'https://5wilb4sld8.execute-api.ap-south-1.amazonaws.com/$default';
 
   // Don’t auto‑follow the 302 from API Gateway
   const response = await fetch(`${apiBase}/${shortcode}`, {
