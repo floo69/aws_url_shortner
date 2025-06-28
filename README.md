@@ -39,9 +39,7 @@ A fully serverless URL shortener built using **AWS Lambda**, **API Gateway**, **
 
 ## 📸 Preview
 
-| UI | Result |
-|----|--------|
-| ![Form](./screenshots/form.png) | ![Success](./screenshots/success.png) |
+![Shortened URL Result](./screenshots/result.png)
 
 ---
 
