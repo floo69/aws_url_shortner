@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
     <style>
-        /* Basic styling for a clean, modern look */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             max-width: 600px;
@@ -79,7 +78,6 @@
             transform: none;
         }
 
-        /* Result display area styling */
         .result {
             margin-top: 30px;
             padding: 20px;
@@ -135,7 +133,6 @@
     <div class="container">
         <h1>🔗Floyd's  URL Shortener</h1>
         
-        <!-- Input form for long URL -->
         <form id="shortenForm">
             <div class="input-group">
                 <label for="longUrl">Enter your long URL:</label>
@@ -151,38 +148,30 @@
             </button>
         </form>
 
-        <!-- Result display area -->
         <div id="result" class="result"></div>
     </div>
 
     <script>
-        // API endpoint configuration
         const API_BASE_URL = 'https://5wilb4sld8.execute-api.ap-south-1.amazonaws.com';
         
-        // Get DOM elements
         const form = document.getElementById('shortenForm');
         const longUrlInput = document.getElementById('longUrl');
         const shortenBtn = document.getElementById('shortenBtn');
         const resultDiv = document.getElementById('result');
 
-        // Handle form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Get the long URL from input
             const longUrl = longUrlInput.value.trim();
             
-            // Basic validation
             if (!longUrl) {
                 showError('Please enter a URL');
                 return;
             }
 
-            // Show loading state
             setLoading(true);
             
             try {
-                // Send POST request to shorten endpoint
                 const response = await fetch(`${API_BASE_URL}/shorten`, {
                     method: 'POST',
                     headers: {
@@ -193,15 +182,12 @@
                     })
                 });
 
-                // Check if request was successful
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                // Parse JSON response
                 const data = await response.json();
                 
-                // Display the shortened URL
                 if (data.short_url) {
                     showSuccess(data.short_url);
                 } else {
@@ -209,16 +195,13 @@
                 }
 
             } catch (error) {
-                // Handle and display errors
                 console.error('Error shortening URL:', error);
                 showError(`Failed to shorten URL: ${error.message}`);
             } finally {
-                // Reset loading state
                 setLoading(false);
             }
         });
 
-        // Show loading state
         function setLoading(isLoading) {
             if (isLoading) {
                 shortenBtn.innerHTML = '<span class="loading"></span>Shortening...';
@@ -229,7 +212,6 @@
             }
         }
 
-        // Display success result with clickable short URL
         function showSuccess(shortUrl) {
             resultDiv.className = 'result success';
             resultDiv.style.display = 'block';
@@ -244,14 +226,12 @@
             `;
         }
 
-        // Display error message
         function showError(message) {
             resultDiv.className = 'result error';
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `<div>❌ ${message}</div>`;
         }
 
-        // Hide result when user starts typing a new URL
         longUrlInput.addEventListener('input', () => {
             resultDiv.style.display = 'none';
         });
