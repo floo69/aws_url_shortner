@@ -6,7 +6,7 @@ A fully serverless URL shortener built using **AWS Lambda**, **API Gateway**, **
 
 ## 🌐 Live Demo
 
-👉 Try it here: [aws-url-shortner.pages.dev](https://aws-url-shortner.pages.dev)
+👉 Try it here: [aws-url-shortner.pages.dev](https://a-x0b.pages.dev/)
 
 ---
 
