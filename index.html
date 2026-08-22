@@ -3,157 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortener</title>
+    <title>Shorten — URL Shortener</title>
+
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        :root {
+            --bg: #f6f6f4;
+            --white: #ffffff;
+            --black: #111111;
+            --text: #171717;
+            --muted: #8a8a8a;
+            --placeholder: #b7b7b7;
+            --line: #ddddda;
+            --line-dark: #222222;
+
+            --max-width: 1040px;
+            --page-pad: 24px;
+        }
+
+        * {
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* ----------------------------------
+           PAGE
+        ---------------------------------- */
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: min(
+                calc(100% - (var(--page-pad) * 2)),
+                var(--max-width)
+            );
+            margin: 0 auto;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 600;
+        /* ----------------------------------
+           HEADER
+        ---------------------------------- */
+
+        header {
+            height: 66px;
+            border-bottom: 1px solid var(--line);
+
+            flex-shrink: 0;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        .header-inner {
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
+        .brand {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .header-meta {
+            color: var(--muted);
+
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        /* ----------------------------------
+           MAIN
+        ---------------------------------- */
+
+        main {
+            flex: 1;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0;
+        }
+
+        .hero {
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: 285px minmax(0, 1fr);
+            column-gap: 42px;
+
+            align-items: start;
+
+            transform: translateY(-4px);
+        }
+
+        /* ----------------------------------
+           LEFT
+        ---------------------------------- */
+
+        .intro {
+            min-height: 170px;
+
+            padding-right: 28px;
+
+            border-right: 1px solid var(--line);
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 25px;
+
+            color: #7d7d7d;
+
+            font-size: 11px;
             font-weight: 500;
-            color: #555;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+
+            width: 20px;
+            height: 1px;
+
+            background: #bdbdb9;
+        }
+
+        .title {
+            margin: 0;
+
+            font-size: 36px;
+            line-height: 0.98;
+            font-weight: 400;
+            letter-spacing: -0.045em;
+        }
+
+        .title em {
+            display: block;
+
+            margin-top: 3px;
+
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .steps {
+            margin-top: 24px;
+
+            border-top: 1px solid var(--line);
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            align-items: center;
+
+            min-height: 38px;
+
+            border-bottom: 1px solid var(--line);
+        }
+
+        .step-number {
+            color: #a4a4a4;
+
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        .step-text {
+            color: #282828;
+
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        /* ----------------------------------
+           RIGHT / FORM
+        ---------------------------------- */
+
+        .workspace {
+            min-width: 0;
+        }
+
+        .field-label {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #777777;
+
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 130px;
+
+            height: 60px;
+
+            border: 1px solid var(--line-dark);
+            background: var(--white);
         }
 
         input[type="url"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
+            min-width: 0;
+            height: 100%;
+
+            padding: 0 18px;
+
+            border: 0;
+            outline: 0;
+
+            background: transparent;
+
+            color: var(--text);
+
+            font-family: inherit;
             font-size: 16px;
-            transition: border-color 0.3s ease;
-            box-sizing: border-box;
+            font-weight: 400;
+
+            letter-spacing: -0.01em;
+        }
+
+        input[type="url"]::placeholder {
+            color: var(--placeholder);
+            opacity: 1;
         }
 
         input[type="url"]:focus {
-            outline: none;
-            border-color: #667eea;
+            background: #fcfcfc;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            height: 100%;
+
+            padding: 0 20px;
+
+            border: 0;
+            border-left: 1px solid var(--line-dark);
+
+            background: var(--black);
+            color: #ffffff;
+
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+
             cursor: pointer;
-            transition: transform 0.2s ease;
+
+            transition:
+                background-color 160ms ease,
+                opacity 160ms ease;
         }
 
         button:hover {
-            transform: translateY(-2px);
+            background: #252525;
+        }
+
+        button:active {
+            background: #000000;
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--black);
+            outline-offset: 3px;
         }
 
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
+
+        /* ----------------------------------
+           RESULT
+        ---------------------------------- */
 
         .result {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            min-height: 50px;
             display: none;
+
+            margin-top: 22px;
+
+            border-top: 1px solid var(--line-dark);
+            border-bottom: 1px solid var(--line);
+
+            padding: 17px 0 19px;
         }
 
-        .result.success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-
+        .result.success,
         .result.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+            display: block;
+        }
+
+        .result-label {
+            margin-bottom: 8px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .result-message {
+            margin-bottom: 7px;
+
+            color: #666666;
+
+            font-size: 12px;
         }
 
         .short-url {
-            font-weight: 600;
-            word-break: break-all;
+            font-size: 17px;
+            line-height: 1.4;
+
+            overflow-wrap: anywhere;
         }
 
         .short-url a {
-            color: #0066cc;
+            color: var(--text);
             text-decoration: none;
+
+            border-bottom: 1px solid var(--text);
         }
 
         .short-url a:hover {
-            text-decoration: underline;
+            opacity: 0.6;
         }
+
+        /* ----------------------------------
+           LOADING
+        ---------------------------------- */
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+
+            width: 13px;
+            height: 13px;
+
+            margin-right: 8px;
+
+            vertical-align: -2px;
+
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #ffffff;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+
+            animation: spin 700ms linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ----------------------------------
+           FOOTER
+        ---------------------------------- */
+
+        footer {
+            flex-shrink: 0;
+
+            height: 92px;
+        }
+
+        .footer-inner {
+            height: 100%;
+
+            border-top: 1px solid var(--line);
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            padding-top: 22px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+            letter-spacing: 0.04em;
+        }
+
+        /* ----------------------------------
+           RESPONSIVE
+        ---------------------------------- */
+
+        @media (max-width: 900px) {
+            main {
+                padding: 72px 0;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                row-gap: 44px;
+            }
+
+            .intro {
+                min-height: 0;
+                padding-right: 0;
+                border-right: 0;
+            }
+
+            .workspace {
+                width: 100%;
+            }
+
+            footer {
+                height: auto;
+            }
+
+            .footer-inner {
+                padding-bottom: 22px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --page-pad: 18px;
+            }
+
+            header {
+                height: 60px;
+            }
+
+            .header-meta {
+                font-size: 10px;
+            }
+
+            main {
+                padding: 60px 0 72px;
+            }
+
+            .hero {
+                row-gap: 38px;
+            }
+
+            .title {
+                font-size: 38px;
+            }
+
+            .form-control {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            input[type="url"] {
+                height: 68px;
+                padding: 0 18px;
+            }
+
+            button {
+                height: 58px;
+                border-left: 0;
+                border-top: 1px solid var(--line-dark);
+            }
+
+            .footer-inner {
+                font-size: 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🔗URL Shortener</h1>
-        
-        <form id="shortenForm">
-            <div class="input-group">
-                <label for="longUrl">Enter your long URL:</label>
-                <input 
-                    type="url" 
-                    id="longUrl" 
-                    placeholder="https://example.com/very/long/url/here"
-                    required
-                >
-            </div>
-            <button type="submit" id="shortenBtn">
-                Shorten URL
-            </button>
-        </form>
 
-        <div id="result" class="result"></div>
+<body>
+    <div class="page">
+
+        <header>
+            <div class="container header-inner">
+                <div class="brand">Shorten</div>
+                <div class="header-meta">AWS / ap-south-1</div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                <section class="hero">
+
+                    <div class="intro">
+                        <div class="eyebrow">Utility</div>
+
+                        <h1 class="title">
+                            URL
+                            <em>Shortener</em>
+                        </h1>
+
+                        <div class="steps">
+                            <div class="step">
+                                <span class="step-number">01</span>
+                                <span class="step-text">
+                                    Paste any long URL
+                                </span>
+                            </div>
+
+                            <div class="step">
+                                <span class="step-number">02</span>
+                                <span class="step-text">
+                                    Get a short link instantly
+                                </span>
+                            </div>
+
+                            <div class="step">
+                                <span class="step-number">03</span>
+                                <span class="step-text">
+                                    Copy or open with one click
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workspace">
+                        <label class="field-label" for="longUrl">
+                            Long URL
+                        </label>
+
+                        <form id="shortenForm">
+                            <div class="form-control">
+
+                                <input
+                                    type="url"
+                                    id="longUrl"
+                                    placeholder="https://example.com/path/to/resource"
+                                    autocomplete="url"
+                                    required
+                                >
+
+                                <button
+                                    type="submit"
+                                    id="shortenBtn"
+                                >
+                                    Shorten
+                                </button>
+
+                            </div>
+                        </form>
+
+                        <div id="result" class="result"></div>
+                    </div>
+
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container footer-inner">
+                <span>AWS Lambda</span>
+                <span>5wilb4sld8</span>
+            </div>
+        </footer>
+
     </div>
 
     <script>
-        const API_BASE_URL = 'https://5wilb4sld8.execute-api.ap-south-1.amazonaws.com';
-        
+        const API_BASE_URL =
+            'https://5wilb4sld8.execute-api.ap-south-1.amazonaws.com';
+
         const form = document.getElementById('shortenForm');
         const longUrlInput = document.getElementById('longUrl');
         const shortenBtn = document.getElementById('shortenBtn');
@@ -161,16 +618,16 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const longUrl = longUrlInput.value.trim();
-            
+
             if (!longUrl) {
                 showError('Please enter a URL');
                 return;
             }
 
             setLoading(true);
-            
+
             try {
                 const response = await fetch(`${API_BASE_URL}/shorten`, {
                     method: 'POST',
@@ -187,7 +644,7 @@
                 }
 
                 const data = await response.json();
-                
+
                 if (data.short_url) {
                     showSuccess(data.short_url);
                 } else {
@@ -204,32 +661,58 @@
 
         function setLoading(isLoading) {
             if (isLoading) {
-                shortenBtn.innerHTML = '<span class="loading"></span>Shortening...';
+                shortenBtn.innerHTML =
+                    '<span class="loading"></span>Shortening...';
+
                 shortenBtn.disabled = true;
             } else {
-                shortenBtn.innerHTML = 'Shorten URL';
+                shortenBtn.innerHTML = 'Shorten';
                 shortenBtn.disabled = false;
             }
         }
 
         function showSuccess(shortUrl) {
             resultDiv.className = 'result success';
-            resultDiv.style.display = 'block';
+
             resultDiv.innerHTML = `
-                <div>✅ URL shortened successfully!</div>
+                <div class="result-label">Short URL</div>
+                <div class="result-message">
+                    Your shortened link is ready.
+                </div>
                 <div class="short-url">
-                    <strong>Short URL:</strong> 
-                    <a href="${shortUrl}" target="_blank" rel="noopener noreferrer">
-                        ${shortUrl}
+                    <a
+                        href="${escapeHtml(shortUrl)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        ${escapeHtml(shortUrl)}
                     </a>
                 </div>
             `;
+
+            resultDiv.style.display = 'block';
         }
 
         function showError(message) {
             resultDiv.className = 'result error';
+
+            resultDiv.innerHTML = `
+                <div class="result-label">Error</div>
+                <div class="result-message">
+                    ${escapeHtml(message)}
+                </div>
+            `;
+
             resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `<div>❌ ${message}</div>`;
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         longUrlInput.addEventListener('input', () => {
