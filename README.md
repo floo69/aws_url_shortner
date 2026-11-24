@@ -50,4 +50,4 @@ A fully serverless URL shortener built using **AWS Lambda**, **API Gateway**, **
 3. Lambda returns a short code (e.g., `Zx3Zm8`).
 4. Cloudflare Worker listens on `https://aws-url-shortner.pages.dev/Zx3Zm8` and redirects to the original long URL via the API.
 
-
+Off Campus code = FNXTPJ
